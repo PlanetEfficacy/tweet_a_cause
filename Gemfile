@@ -29,8 +29,9 @@ gem 'jbuilder', '~> 2.5'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
-#store environment variables securely
+# store environment variables securely
 gem 'figaro'
+# Loggin in production
 gem 'rails_12factor', group: :production
 
 group :development, :test do
