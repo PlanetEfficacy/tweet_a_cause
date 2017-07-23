@@ -8,6 +8,15 @@ class User < ApplicationRecord
   devise :trackable, :omniauthable,
          omniauth_providers: [:twitter]
 
+  def client
+    Twitter::REST::Client.new do |config|
+      config.consumer_key = ENV['TWITTER_CONSUMER_KEY']
+      config.consumer_secret = ENV['TWITTER_CONSUMER_SECRET']
+      config.access_token = twitter_token
+      config.access_token_secret = twitter_secret
+    end
+  end
+
   class << self
     def from_omniauth(auth)
       user = where(provider: auth[:provider], uid: auth[:uid]).first_or_create do |user|
@@ -23,6 +32,7 @@ class User < ApplicationRecord
     end
 
     private
+
     def reconcile_twitter_token_and_secret(user, auth)
       unless token_and_secret_are_already_stored?(user, auth)
         user.twitter_token =  auth[:credentials][:token]

@@ -42,4 +42,17 @@ RSpec.describe User, type: :model do
       expect(result.twitter_secret).to eq auth[:credentials][:secret]
     end
   end
+
+  describe "#twitter_client" do
+    it "establishes a connection with the twitter api using user token and secret" do
+      user = create :user
+
+      result = user.client
+
+      expect(result.consumer_key).to eq ENV['TWITTER_CONSUMER_KEY']
+      expect(result.consumer_secret).to eq ENV['TWITTER_CONSUMER_SECRET']
+      expect(result.access_token).to eq user.twitter_token
+      expect(result.access_token_secret).to eq user.twitter_secret 
+    end
+  end
 end
