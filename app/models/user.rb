@@ -8,6 +8,8 @@ class User < ApplicationRecord
   devise :trackable, :omniauthable,
          omniauth_providers: [:twitter]
 
+  has_many :tweets
+
   def client
     Twitter::REST::Client.new do |config|
       config.consumer_key = ENV['TWITTER_CONSUMER_KEY']
@@ -15,6 +17,10 @@ class User < ApplicationRecord
       config.access_token = twitter_token
       config.access_token_secret = twitter_secret
     end
+  end
+
+  def most_recent_tweet
+    tweets.order('created_at DESC').first
   end
 
   class << self

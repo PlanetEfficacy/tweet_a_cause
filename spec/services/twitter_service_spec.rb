@@ -1,7 +1,7 @@
 require "rails_helper"
 
 describe TwitterService do
-  let!(:user) { double }
+  let!(:user) { create :user }
   let!(:client) { double }
 
   before(:each) do
@@ -19,13 +19,26 @@ describe TwitterService do
   end
 
   describe "#fetch_tweets" do
+
     before(:each) do
-      allow(client).to receive(:user).and_return(user)
-      allow(client).to receive(:user_timeline).with(user, count: 200, trim_user: true).once
+      allow(client).to receive(:user).and_return(user.uid)
     end
 
-    it "fetches a user's tweets" do
-      described_class.new(user).fetch_tweets
+    context "when a user has no stored tweets" do
+      it "fetches a user's tweets" do
+        expect(client).to receive(:user_timeline).with(user.uid, count: 200, trim_user: true, since_id: nil).once
+
+        described_class.new(user).fetch_tweets
+      end
+    end
+
+    context "when a user has stored tweets" do
+      it "fetches a user's tweet since the most recent stored tweet" do
+        tweet = create :tweet, user: user
+        expect(client).to receive(:user_timeline).with(user.uid, count: 200, trim_user: true, since_id: tweet.tweet_id)
+
+        described_class.new(user).fetch_tweets
+      end
     end
   end
 
@@ -36,7 +49,6 @@ describe TwitterService do
     let(:datetime) { 1.day.ago }
 
     it "stores a user's tweets" do
-      user = create :user
       twitter_service = described_class.new(user)
       allow(twitter_service).to receive(:fetch_tweets).and_return(tweets)
       allow(tweet).to receive(:id).and_return(id)
@@ -45,7 +57,7 @@ describe TwitterService do
       result = twitter_service.store_new_tweets
 
       expect(Tweet.count).to eq 1
-      expect(Tweet.first.twitter_id).to eq(id)
+      expect(Tweet.first.tweet_id).to eq(id)
       expect(Tweet.first.date).to eq(datetime)
       expect(Tweet.first.user).to eq(user)
     end

@@ -7,6 +7,23 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe "associations" do
+    it { should have_many :tweets }
+  end
+
+
+  describe "#most_recent_tweet" do
+    it "returns the users most recent tweet" do
+      user = create :user
+      tweet1 = create :tweet, user: user, tweet_id: 1, created_at: 1.day.ago
+      tweet2 = create :tweet, user: user, tweet_id: 2, created_at: Time.now
+
+      result = user.most_recent_tweet
+
+      expect(result).to eq(tweet2)
+    end
+  end
+
   describe "#from_omniauth(auth)" do
     let!(:credentials) { { token: '123', secret: 'abc' } }
     let!(:info) { { email: 'jesse@example.com' } }
@@ -52,7 +69,7 @@ RSpec.describe User, type: :model do
       expect(result.consumer_key).to eq ENV['TWITTER_CONSUMER_KEY']
       expect(result.consumer_secret).to eq ENV['TWITTER_CONSUMER_SECRET']
       expect(result.access_token).to eq user.twitter_token
-      expect(result.access_token_secret).to eq user.twitter_secret 
+      expect(result.access_token_secret).to eq user.twitter_secret
     end
   end
 end
