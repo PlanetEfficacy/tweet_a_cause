@@ -36,6 +36,7 @@ describe TwitterService do
     let(:datetime) { 1.day.ago }
 
     it "stores a user's tweets" do
+      user = create :user
       twitter_service = described_class.new(user)
       allow(twitter_service).to receive(:fetch_tweets).and_return(tweets)
       allow(tweet).to receive(:id).and_return(id)
