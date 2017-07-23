@@ -54,7 +54,7 @@ describe TwitterService do
       allow(tweet).to receive(:id).and_return(id)
       allow(tweet).to receive(:created_at).and_return(datetime)
 
-      result = twitter_service.store_new_tweets
+      twitter_service.store_new_tweets
 
       expect(Tweet.count).to eq 1
       expect(Tweet.first.tweet_id).to eq(id)
