@@ -7,6 +7,7 @@ class TwitterService
     @client = user.client
   end
 
-  def fetch_tweets
+  def fetch_tweets(count: 200)
+    client.user_timeline(client.user, count: count, trim_user: true)
   end
 end
