@@ -19,11 +19,33 @@ describe TwitterService do
   end
 
   describe "#fetch_tweets" do
-    it "fetches a user's tweets" do
-      client.should_receive(:user).and_return(user)
-      client.should_receive(:user_timeline).with(user, count: 200, trim_user: true).once
+    before(:each) do
+      allow(client).to receive(:user).and_return(user)
+      allow(client).to receive(:user_timeline).with(user, count: 200, trim_user: true).once
+    end
 
-      result = described_class.new(user).fetch_tweets
+    it "fetches a user's tweets" do
+      described_class.new(user).fetch_tweets
+    end
+  end
+
+  describe "#store_new_tweets" do
+    let(:tweet) { double }
+    let(:tweets) { [tweet] }
+    let(:id) { '123456789' }
+    let(:datetime) { 1.day.ago }
+
+    it "stores a user's tweets" do
+      twitter_service = described_class.new(user)
+      allow(twitter_service).to receive(:fetch_tweets).and_return(tweets)
+      allow(tweet).to receive(:id).and_return(id)
+      allow(tweet).to receive(:created_at).and_return(datetime)
+
+      result = twitter_service.store_new_tweets
+
+      expect(Tweet.count).to eq 1
+      expect(Tweet.first.twitter_id).to eq(id)
+      expect(Tweet.first.date).to eq(datetime)
     end
   end
 
