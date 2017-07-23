@@ -46,6 +46,7 @@ describe TwitterService do
       expect(Tweet.count).to eq 1
       expect(Tweet.first.twitter_id).to eq(id)
       expect(Tweet.first.date).to eq(datetime)
+      expect(Tweet.first.user).to eq(user)
     end
   end
 

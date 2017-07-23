@@ -17,8 +17,9 @@ class TwitterService
       tweet = Tweet.new
       tweet.twitter_id = t.id
       tweet.date = t.created_at
+      tweet.user = user
       tweet.save!
     end
   end
-  
+
 end
