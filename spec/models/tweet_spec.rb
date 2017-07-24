@@ -13,7 +13,7 @@ RSpec.describe Tweet, type: :model do
 
   describe "factory" do
     it "is valid" do
-      expect(build :tweet).to be_valid
+      expect(build :tweet, user: (create :user)).to be_valid
     end
   end
 end

@@ -10,10 +10,28 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170723152625) do
+ActiveRecord::Schema.define(version: 20170724030413) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "charities", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "donations", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "tweet_id"
+    t.bigint "charity_id"
+    t.integer "amount"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["charity_id"], name: "index_donations_on_charity_id"
+    t.index ["tweet_id"], name: "index_donations_on_tweet_id"
+    t.index ["user_id"], name: "index_donations_on_user_id"
+  end
 
   create_table "tweets", force: :cascade do |t|
     t.string "tweet_id"
@@ -40,5 +58,8 @@ ActiveRecord::Schema.define(version: 20170723152625) do
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
+  add_foreign_key "donations", "charities"
+  add_foreign_key "donations", "tweets"
+  add_foreign_key "donations", "users"
   add_foreign_key "tweets", "users"
 end
