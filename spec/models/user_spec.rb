@@ -10,6 +10,8 @@ RSpec.describe User, type: :model do
 
   describe "associations" do
     it { should have_many :tweets }
+    it { should have_many :preferences }
+    it { should have_many :donations }
   end
 
 
@@ -71,6 +73,22 @@ RSpec.describe User, type: :model do
       expect(result.consumer_secret).to eq ENV['TWITTER_CONSUMER_SECRET']
       expect(result.access_token).to eq user.twitter_token
       expect(result.access_token_secret).to eq user.twitter_secret
+    end
+  end
+
+  describe "preference methods" do
+    let!(:user) { create :user }
+    let!(:charity) { create :charity }
+    let!(:preference) { create :preference, user: user, charity: charity, amount: 10 }
+    describe "#charity" do
+      it "returns a users perferred charity" do
+        expect(user.charity).to eq charity
+      end
+    end
+    describe "#default_contribution" do
+      it "returns a users perferred contribution level" do
+        expect(user.default_contribution).to eq 10
+      end
     end
   end
 end

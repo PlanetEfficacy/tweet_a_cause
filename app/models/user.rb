@@ -9,6 +9,8 @@ class User < ApplicationRecord
          omniauth_providers: [:twitter]
 
   has_many :tweets
+  has_many :preferences
+  has_many :donations
 
   def client
     Twitter::REST::Client.new do |config|
@@ -21,6 +23,14 @@ class User < ApplicationRecord
 
   def most_recent_tweet
     tweets.order('created_at DESC').first
+  end
+
+  def charity
+    preferences.order('created_at DESC').first.charity
+  end
+
+  def default_contribution
+    preferences.order('created_at DESC').first.amount
   end
 
   class << self

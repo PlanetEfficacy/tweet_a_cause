@@ -4,26 +4,22 @@ class DonationService
 
   def initialize(user)
     @user = user
-    @charity = user.client
-    @most_recent_tweet_id = user.most_recent_tweet.tweet_id if user.most_recent_tweet.present?
+    @charity = user.charity
   end
 
-  def fetch_tweets(count: 200)
-    options = {
-      count: count,
-      trim_user: true,
-      since_id: @most_recent_tweet_id
-    }
-    client.user_timeline(client.user, options)
+  def fetch_tweets_without_donations
+    return user.tweets if user.donations.empty?
+    user.tweets.where("tweets.id NOT IN (?)", user.donations.pluck(:tweet_id))
   end
 
-  def store_new_tweets
-    fetch_tweets.each do |t|
-      tweet             = Tweet.new
-      tweet.tweet_id    = t.id
-      tweet.date        = t.created_at
-      tweet.user        = user
-      tweet.save!
+  def create_donations
+    fetch_tweets_without_donations.each do |tweet|
+      donation = Donation.new
+      donation.user = user
+      donation.tweet = tweet
+      donation.charity = charity
+      donation.amount = user.default_contribution
+      donation.save!
     end
   end
 

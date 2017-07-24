@@ -3,6 +3,7 @@ require "rails_helper"
 describe DonationService do
   let!(:user) { create :user }
   let!(:charity) { create :charity }
+  let!(:preference) { create :preference, user: user, charity: charity }
   let!(:tweet) { create :tweet }
 
   describe "#new" do
