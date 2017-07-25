@@ -5,5 +5,11 @@ class TweetDonationsService
         TwitterService.new(user).store_new_tweets
       end
     end
+
+    def create_donations_for_all_new_tweets
+      User.all.each do |user|
+        DonationService.new(user).create_donations
+      end
+    end
   end
 end
