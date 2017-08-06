@@ -11,7 +11,6 @@ describe DonationService do
       result = described_class.new(user)
 
       expect(result).to be_instance_of DonationService
-      # expect(result.tweet).to eq tweet
       expect(result.user).to eq user
       expect(result.charity).to eq charity
     end

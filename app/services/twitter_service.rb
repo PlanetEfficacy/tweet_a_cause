@@ -16,8 +16,8 @@ class TwitterService
     options = {
       count: @count,
       trim_user: true,
-      since_id: @most_recent_tweet_id
     }
+    options.merge!(since_id: @most_recent_tweet_id) if @most_recent_tweet_id
     client.user_timeline(client.user, options)
   end
 

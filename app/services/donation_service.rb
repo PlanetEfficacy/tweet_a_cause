@@ -9,7 +9,9 @@ class DonationService
 
   def fetch_tweets_without_donations
     return user.tweets if user.donations.empty?
-    user.tweets.where("tweets.id NOT IN (?)", user.donations.pluck(:tweet_id))
+    tweets = user.tweets.where("tweets.id NOT IN (?)", user.donations.pluck(:tweet_id))
+    Rails.logger.warn "User:#{user.id} has #{tweets.size} tweets without donations."
+    tweets
   end
 
   def create_donations
@@ -20,6 +22,7 @@ class DonationService
       donation.charity = charity
       donation.amount = user.default_contribution
       donation.save!
+      Rails.logger.warn "User:#{user.id} donation: #{donation.id} for amount: #{donation.amount} to charity: #{charity.id}"
     end
   end
 

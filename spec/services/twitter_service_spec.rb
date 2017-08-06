@@ -26,7 +26,7 @@ describe TwitterService do
 
     context "when a user has no stored tweets" do
       it "fetches a user's tweets" do
-        expect(client).to receive(:user_timeline).with(user.uid, count: 1, trim_user: true, since_id: nil).once
+        expect(client).to receive(:user_timeline).with(user.uid, count: 1, trim_user: true).once
 
         described_class.new(user).fetch_tweets
       end
