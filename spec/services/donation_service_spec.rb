@@ -48,7 +48,7 @@ describe DonationService do
       expect(result.tweet).to eq tweet
       expect(result.user).to eq user
       expect(result.charity).to eq charity
-      expect(result.complete?).to eq 'false'
+      expect(result.complete?).to eq false
     end
   end
 
