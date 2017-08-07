@@ -31,4 +31,6 @@ describe TweetDonationsService do
       described_class.create_donations_for_all_new_tweets
     end
   end
+
+  # describe "#"
 end

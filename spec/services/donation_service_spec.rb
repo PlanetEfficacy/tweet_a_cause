@@ -42,10 +42,13 @@ describe DonationService do
       donation_service = described_class.new(user)
       donation_service.create_donations
 
+      result = Donation.first
+
       expect(Donation.count).to eq 1
-      expect(Donation.first.tweet).to eq tweet
-      expect(Donation.first.user).to eq user
-      expect(Donation.first.charity).to eq charity
+      expect(result.tweet).to eq tweet
+      expect(result.user).to eq user
+      expect(result.charity).to eq charity
+      expect(result.complete?).to eq 'false'
     end
   end
 

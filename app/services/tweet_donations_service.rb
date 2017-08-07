@@ -11,5 +11,6 @@ class TweetDonationsService
         DonationService.new(user).create_donations
       end
     end
+
   end
 end
